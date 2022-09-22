@@ -33,4 +33,5 @@ protected:
 public:
 	afx_msg void OnBnClickedNumber();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	void AppendLine(CString& string);
 };

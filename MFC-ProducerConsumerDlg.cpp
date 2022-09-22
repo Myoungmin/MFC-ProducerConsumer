@@ -97,9 +97,13 @@ BOOL CMFCProducerConsumerDlg::PreTranslateMessage(MSG* pMsg)
 		(pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE))
 	{
 		CString string;
-
 		GetDlgItem(IDC_EDIT2)->GetWindowText(string);
-		GetDlgItem(IDC_EDIT1)->SetWindowText(string);
+
+		if (string.IsEmpty()) return TRUE;
+
+		AppendLine(string);
+
+		GetDlgItem(IDC_EDIT2)->SetWindowText(_T(""));
 
 		// Enter Key Dialog 종료 방지
 		return TRUE;
@@ -107,4 +111,22 @@ BOOL CMFCProducerConsumerDlg::PreTranslateMessage(MSG* pMsg)
 
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CMFCProducerConsumerDlg::AppendLine(CString& string)
+{
+	CString strBefore;
+	CString strAfter;
+	GetDlgItem(IDC_EDIT1)->GetWindowText(strBefore);
+
+	if (strBefore.IsEmpty())
+	{
+		strAfter = string;
+	}
+	else
+	{
+		strAfter = strBefore + "\r\n" + string;
+	}
+	
+	GetDlgItem(IDC_EDIT1)->SetWindowText(strAfter);
 }
