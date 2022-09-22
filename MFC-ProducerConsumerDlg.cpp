@@ -13,10 +13,6 @@
 #endif
 
 
-// CMFCProducerConsumerDlg dialog
-
-
-
 CMFCProducerConsumerDlg::CMFCProducerConsumerDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCPRODUCERCONSUMER_DIALOG, pParent)
 {
@@ -31,6 +27,7 @@ void CMFCProducerConsumerDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CMFCProducerConsumerDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON1, OnBnClickedNumber)
 END_MESSAGE_MAP()
 
 
@@ -86,3 +83,28 @@ HCURSOR CMFCProducerConsumerDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CMFCProducerConsumerDlg::OnBnClickedNumber()
+{
+	// TODO: Add your control notification handler code here
+}
+
+
+BOOL CMFCProducerConsumerDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN &&
+		(pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE))
+	{
+		CString string;
+
+		GetDlgItem(IDC_EDIT2)->GetWindowText(string);
+		GetDlgItem(IDC_EDIT1)->SetWindowText(string);
+
+		// Enter Key Dialog 종료 방지
+		return TRUE;
+	}
+
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
