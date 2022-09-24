@@ -28,6 +28,7 @@ BEGIN_MESSAGE_MAP(CMFCProducerConsumerDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, OnBnClickedNumber)
+	ON_MESSAGE(UM_APPENDLINE, OnApendLineMessage)
 END_MESSAGE_MAP()
 
 
@@ -84,36 +85,17 @@ HCURSOR CMFCProducerConsumerDlg::OnQueryDragIcon()
 }
 
 
-
-void CMFCProducerConsumerDlg::OnBnClickedNumber()
+LRESULT CMFCProducerConsumerDlg::OnApendLineMessage(WPARAM wParam, LPARAM lParam)
 {
-	// TODO: Add your control notification handler code here
+	CString* pstrString = (CString*)lParam;
+
+	AppendLine(*pstrString);
+
+	return LRESULT();
 }
 
 
-BOOL CMFCProducerConsumerDlg::PreTranslateMessage(MSG* pMsg)
-{
-	if (pMsg->message == WM_KEYDOWN &&
-		(pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE))
-	{
-		CString string;
-		GetDlgItem(IDC_EDIT2)->GetWindowText(string);
-
-		if (string.IsEmpty()) return TRUE;
-
-		AppendLine(string);
-
-		GetDlgItem(IDC_EDIT2)->SetWindowText(_T(""));
-
-		// Enter Key Dialog 종료 방지
-		return TRUE;
-	}
-
-
-	return CDialogEx::PreTranslateMessage(pMsg);
-}
-
-void CMFCProducerConsumerDlg::AppendLine(CString& string)
+void CMFCProducerConsumerDlg::AppendLine(const CString& string) const
 {
 	CString strBefore;
 	CString strAfter;
@@ -127,6 +109,37 @@ void CMFCProducerConsumerDlg::AppendLine(CString& string)
 	{
 		strAfter = strBefore + "\r\n" + string;
 	}
-	
+
 	GetDlgItem(IDC_EDIT1)->SetWindowText(strAfter);
+}
+
+
+void CMFCProducerConsumerDlg::OnBnClickedNumber()
+{
+	// TODO: Add your control notification handler code here
+}
+
+
+BOOL CMFCProducerConsumerDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN &&
+		(pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE))
+	{
+		//CString string;
+		GetDlgItem(IDC_EDIT2)->GetWindowText(m_strAppendedString);
+
+		if (m_strAppendedString.IsEmpty()) return TRUE;
+
+		// 입력 내용 CString을 LPARAM 파라미터로 전달.
+		// PostMessage를 실행하여 메시지 큐로 보낸다.
+		PostMessage(UM_APPENDLINE, NULL, (LPARAM)&m_strAppendedString);
+
+		GetDlgItem(IDC_EDIT2)->SetWindowText(_T(""));
+
+		// Enter Key Dialog 종료 방지
+		return TRUE;
+	}
+
+
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

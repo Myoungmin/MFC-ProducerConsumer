@@ -29,9 +29,12 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg LRESULT OnApendLineMessage(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedNumber();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	void AppendLine(CString& string);
+	void AppendLine(const CString& string) const;
+
+	CString m_strAppendedString;
 };
