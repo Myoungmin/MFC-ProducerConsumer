@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 // CMFCProducerConsumerDlg dialog
 class CMFCProducerConsumerDlg : public CDialogEx
 {
@@ -36,5 +35,7 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	void AppendLine(const CString& string) const;
 
+private:
 	CString m_strAppendedString;
+	int m_nNumber = 0;
 };

@@ -116,7 +116,9 @@ void CMFCProducerConsumerDlg::AppendLine(const CString& string) const
 
 void CMFCProducerConsumerDlg::OnBnClickedNumber()
 {
-	// TODO: Add your control notification handler code here
+	m_nNumber++;
+	m_strAppendedString.Format(_T("New Line {%d)"), m_nNumber);
+	PostMessage(UM_APPENDLINE, NULL, (LPARAM)&m_strAppendedString);
 }
 
 
