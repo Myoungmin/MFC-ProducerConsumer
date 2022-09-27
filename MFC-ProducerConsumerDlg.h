@@ -36,6 +36,8 @@ public:
 	void AppendLine(const CString& string) const;
 
 private:
+	static UINT ProducerThread(LPVOID Param);
+
 	CString m_strAppendedString;
 	int m_nNumber = 0;
 };

@@ -43,7 +43,8 @@ BOOL CMFCProducerConsumerDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	// TODO: Add extra initialization here
+	// 삽질 오래한 내용 : 스레드 실행을 생성자에서 넣으니 에러 발생, OnInitDialog안에서 해야 한다.
+	AfxBeginThread(ProducerThread, this);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -113,12 +114,24 @@ void CMFCProducerConsumerDlg::AppendLine(const CString& string) const
 	GetDlgItem(IDC_EDIT1)->SetWindowText(strAfter);
 }
 
+UINT CMFCProducerConsumerDlg::ProducerThread(LPVOID Param)
+{
+	CMFCProducerConsumerDlg* dlg = (CMFCProducerConsumerDlg*)Param;
+	while (TRUE) 
+	{
+		dlg->PostMessage(UM_APPENDLINE, NULL, (LPARAM)(&(dlg->m_strAppendedString)));
+		Sleep(1000);
+	}
+
+	return TRUE;
+}
+
 
 void CMFCProducerConsumerDlg::OnBnClickedNumber()
 {
 	m_nNumber++;
 	m_strAppendedString.Format(_T("New Line {%d)"), m_nNumber);
-	PostMessage(UM_APPENDLINE, NULL, (LPARAM)&m_strAppendedString);
+	//PostMessage(UM_APPENDLINE, NULL, (LPARAM)&m_strAppendedString);
 }
 
 
