@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <deque>
 
 // CMFCProducerConsumerDlg dialog
 class CMFCProducerConsumerDlg : public CDialogEx
@@ -40,4 +41,5 @@ private:
 
 	CString m_strAppendedString;
 	int m_nNumber = 0;
+	std::deque<CString> m_deque;
 };

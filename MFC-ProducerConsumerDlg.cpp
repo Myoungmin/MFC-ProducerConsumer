@@ -116,10 +116,18 @@ void CMFCProducerConsumerDlg::AppendLine(const CString& string) const
 
 UINT CMFCProducerConsumerDlg::ProducerThread(LPVOID Param)
 {
+	CString strPopString;
 	CMFCProducerConsumerDlg* dlg = (CMFCProducerConsumerDlg*)Param;
 	while (TRUE) 
 	{
-		dlg->PostMessage(UM_APPENDLINE, NULL, (LPARAM)(&(dlg->m_strAppendedString)));
+		if (!(dlg->m_deque.empty()))
+		{
+			//dlg->m_strAppendedString = std::move(dlg->m_deque.front());
+			strPopString = std::move(dlg->m_deque.front());
+			dlg->m_deque.pop_front();
+			//dlg->PostMessage(UM_APPENDLINE, NULL, (LPARAM)(&(dlg->m_strAppendedString)));
+			dlg->PostMessage(UM_APPENDLINE, NULL, (LPARAM)(&strPopString));
+		}
 		Sleep(1000);
 	}
 
@@ -129,8 +137,11 @@ UINT CMFCProducerConsumerDlg::ProducerThread(LPVOID Param)
 
 void CMFCProducerConsumerDlg::OnBnClickedNumber()
 {
+	CString strPushString;
 	m_nNumber++;
-	m_strAppendedString.Format(_T("New Line {%d)"), m_nNumber);
+	//m_strAppendedString.Format(_T("New Line {%d)"), m_nNumber);
+	strPushString.Format(_T("New Line {%d)"), m_nNumber);
+	m_deque.push_back(std::move(strPushString));
 	//PostMessage(UM_APPENDLINE, NULL, (LPARAM)&m_strAppendedString);
 }
 
