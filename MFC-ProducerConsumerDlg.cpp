@@ -120,6 +120,7 @@ UINT CMFCProducerConsumerDlg::ProducerThread(LPVOID Param)
 	CMFCProducerConsumerDlg* dlg = (CMFCProducerConsumerDlg*)Param;
 	while (TRUE) 
 	{
+		std::unique_lock<std::mutex> ul(dlg->m_mutex);
 		if (!(dlg->m_deque.empty()))
 		{
 			//dlg->m_strAppendedString = std::move(dlg->m_deque.front());
@@ -128,6 +129,7 @@ UINT CMFCProducerConsumerDlg::ProducerThread(LPVOID Param)
 			//dlg->PostMessage(UM_APPENDLINE, NULL, (LPARAM)(&(dlg->m_strAppendedString)));
 			dlg->PostMessage(UM_APPENDLINE, NULL, (LPARAM)(&strPopString));
 		}
+		ul.unlock();
 		Sleep(1000);
 	}
 
@@ -141,6 +143,7 @@ void CMFCProducerConsumerDlg::OnBnClickedNumber()
 	m_nNumber++;
 	//m_strAppendedString.Format(_T("New Line {%d)"), m_nNumber);
 	strPushString.Format(_T("New Line {%d)"), m_nNumber);
+	std::unique_lock<std::mutex> ul(m_mutex);
 	m_deque.push_back(std::move(strPushString));
 	//PostMessage(UM_APPENDLINE, NULL, (LPARAM)&m_strAppendedString);
 }

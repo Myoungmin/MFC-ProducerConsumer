@@ -4,6 +4,7 @@
 
 #pragma once
 #include <deque>
+#include <mutex>
 
 // CMFCProducerConsumerDlg dialog
 class CMFCProducerConsumerDlg : public CDialogEx
@@ -42,4 +43,5 @@ private:
 	CString m_strAppendedString;
 	int m_nNumber = 0;
 	std::deque<CString> m_deque;
+	std::mutex m_mutex;
 };
